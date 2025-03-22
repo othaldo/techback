@@ -23,6 +23,7 @@ function App() {
     );
 
     const newPlan = generateAdaptivePlan(storedFeedback, 1);
+
     const startingDay = resetToday ? 1 : currentDay;
     setCurrentDay(startingDay);
     setDayData(newPlan[startingDay - 1] || newPlan[0]);
@@ -41,7 +42,7 @@ function App() {
     if (user) {
       refreshPlan();
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (!user) {

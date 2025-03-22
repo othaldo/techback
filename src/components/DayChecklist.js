@@ -1,41 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { exerciseLibrary } from "../data/exerciseLibrary";
 
 const DayChecklist = ({ dayData }) => {
-  const storageKey = `techback-day-${dayData.day}`;
-  const [checked, setChecked] = useState([]);
+  const [checked, setChecked] = useState(() => {
+    const saved = localStorage.getItem(`techback-day-${dayData.day}`);
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  useEffect(() => {
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      setChecked(JSON.parse(stored));
-    }
-  }, [storageKey]);
+  const [openInfo, setOpenInfo] = useState(null);
 
   const toggleCheck = (index) => {
-    const updated = checked.includes(index)
+    const newChecked = checked.includes(index)
       ? checked.filter((i) => i !== index)
       : [...checked, index];
-    setChecked(updated);
-    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setChecked(newChecked);
+    localStorage.setItem(
+      `techback-day-${dayData.day}`,
+      JSON.stringify(newChecked)
+    );
+  };
+
+  const toggleInfo = (baseName) => {
+    setOpenInfo((prev) => (prev === baseName ? null : baseName));
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white shadow-md rounded-xl">
-      <h2 className="text-xl font-semibold mb-4">{dayData.title}</h2>
-      <ul className="space-y-2">
-        {dayData.exercises.map((item, idx) => (
-          <li key={idx}>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={checked.includes(idx)}
-                onChange={() => toggleCheck(idx)}
-                className="w-5 h-5"
-              />
-              <span>{item}</span>
-            </label>
-          </li>
-        ))}
+    <div className="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6">
+      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+        {dayData.title}
+      </h2>
+
+      <ul className="space-y-3">
+        {dayData.exercises.map((exercise, index) => {
+          const baseName = exercise.split(" (")[0];
+          const info = exerciseLibrary[baseName];
+          const isChecked = checked.includes(index);
+
+          return (
+            <li key={index}>
+              <div
+                onClick={() => toggleCheck(index)}
+                className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition ${
+                  isChecked ? "bg-green-100" : "hover:bg-gray-100"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleCheck(index)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="mt-1 scale-125 accent-green-600"
+                />
+
+                <div>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (info) toggleInfo(baseName);
+                    }}
+                    className={info ? "text-blue-600 hover:underline" : ""}
+                  >
+                    {exercise}
+                  </div>
+
+                  {info && openInfo === baseName && (
+                    <div className="mt-2 text-sm text-gray-700">
+                      <p>{info.description}</p>
+                      {info.image && (
+                        <img
+                          src={info.image}
+                          alt={baseName}
+                          className="mt-2 w-full max-w-sm rounded-md"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
