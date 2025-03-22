@@ -50,13 +50,18 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
-      <h1 className="text-center text-3xl font-bold mb-4 text-green-700">
+    <div
+      className="min-h-screen bg-cover bg-center bg-fixed py-10"
+      style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL + "/bg.jpg"})`,
+      }}
+    >
+      <h1 className="text-center text-4xl font-comfortaa text-white mb-6">
         Hey {user.name}! Hier ist Tag {dayData?.day} deines Rückenprogramms
       </h1>
 
       {showMessage && (
-        <p className="text-center text-green-700 mb-4 font-medium">
+        <p className="text-center text-green-700 mb-4 font-comfortaa font-medium">
           ✅ Dein Feedback wurde gespeichert. Dein Programm wurde neu gestartet.
         </p>
       )}
@@ -74,10 +79,10 @@ function App() {
       ) : (
         <>
           {dayData && <DayChecklist dayData={dayData} />}
-          <div className="text-center mt-4">
+          <div className="text-center mt-6">
             <button
               onClick={() => setShowFeedback(true)}
-              className="text-sm text-blue-600 hover:underline"
+              className="bg-emerald-600/80 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg backdrop-blur-md shadow-md transition"
             >
               Programm anpassen
             </button>

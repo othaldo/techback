@@ -25,8 +25,8 @@ const DayChecklist = ({ dayData }) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+    <div className="max-w-xl mx-auto bg-slate-800/70 text-white backdrop-blur-md shadow-lg rounded-xl p-6 border border-white/30">
+      <h2 className="text-xl font-semibold font-comfortaa mb-4 text-gray-800">
         {dayData.title}
       </h2>
 
@@ -41,7 +41,9 @@ const DayChecklist = ({ dayData }) => {
               <div
                 onClick={() => toggleCheck(index)}
                 className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition ${
-                  isChecked ? "bg-green-100" : "hover:bg-gray-100"
+                  isChecked
+                    ? "bg-white/10 border border-green-400/30 text-green-200 bg-emerald-400/20 shadow-inner"
+                    : "hover:bg-white/20 border border-white/10 text-gray-100"
                 }`}
               >
                 <input
@@ -58,13 +60,15 @@ const DayChecklist = ({ dayData }) => {
                       e.stopPropagation();
                       if (info) toggleInfo(baseName);
                     }}
-                    className={info ? "text-blue-600 hover:underline" : ""}
+                    className={
+                      info ? "font-comfortaa text-blue-600 hover:underline" : ""
+                    }
                   >
                     {exercise}
                   </div>
 
                   {info && openInfo === baseName && (
-                    <div className="mt-2 text-sm text-gray-700">
+                    <div className="mt-2 text-sm font-comfortaa text-gray-700">
                       <p>{info.description}</p>
 
                       {info.image && (
