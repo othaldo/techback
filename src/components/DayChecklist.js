@@ -26,7 +26,7 @@ const DayChecklist = ({ dayData }) => {
 
   return (
     <div className="max-w-xl mx-auto bg-slate-800/70 text-white backdrop-blur-md shadow-lg rounded-xl p-6 border border-white/30">
-      <h2 className="text-xl font-semibold font-comfortaa mb-4 text-gray-800">
+      <h2 className="text-xl font-semibold font-comfortaa mb-4 text-white">
         {dayData.title}
       </h2>
 
@@ -42,8 +42,8 @@ const DayChecklist = ({ dayData }) => {
                 onClick={() => toggleCheck(index)}
                 className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition ${
                   isChecked
-                    ? "bg-white/10 border border-green-400/30 text-green-200 bg-emerald-400/20 shadow-inner"
-                    : "hover:bg-white/20 border border-white/10 text-gray-100"
+                    ? "border border-emerald-400 text-emerald-300 bg-emerald-400/20 shadow-inner"
+                    : "hover:bg-slate-800/20 border border-white/10 text-gray-100"
                 }`}
               >
                 <input
@@ -51,7 +51,7 @@ const DayChecklist = ({ dayData }) => {
                   checked={isChecked}
                   onChange={() => toggleCheck(index)}
                   onClick={(e) => e.stopPropagation()}
-                  className="mt-1 scale-125 accent-green-600"
+                  className="mt-1 scale-125 accent-emerald-600"
                 />
 
                 <div>
@@ -61,14 +61,16 @@ const DayChecklist = ({ dayData }) => {
                       if (info) toggleInfo(baseName);
                     }}
                     className={
-                      info ? "font-comfortaa text-blue-600 hover:underline" : ""
+                      info
+                        ? "font-comfortaa text-white-600 hover:underline"
+                        : ""
                     }
                   >
                     {exercise}
                   </div>
 
                   {info && openInfo === baseName && (
-                    <div className="mt-2 text-sm font-comfortaa text-gray-700">
+                    <div className="mt-2 text-sm font-comfortaa text-white">
                       <p>{info.description}</p>
 
                       {info.image && (
@@ -80,7 +82,7 @@ const DayChecklist = ({ dayData }) => {
                           />
 
                           {info.credit && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-white-500 mt-1">
                               Foto:{" "}
                               <a
                                 href={info.credit.url}
