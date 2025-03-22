@@ -4,7 +4,6 @@ import DayChecklist from "./components/DayChecklist";
 import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
 
-import { startPlan } from "./data/startPlan";
 import { generateAdaptivePlan } from "./data/adaptivePlan";
 
 function App() {
@@ -13,32 +12,17 @@ function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [plan, setPlan] = useState([]);
   const [dayData, setDayData] = useState(null);
   const [currentDay, setCurrentDay] = useState(1);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
   const refreshPlan = (resetToday = true) => {
-    const storedUser = JSON.parse(localStorage.getItem("techbackUser") || "{}");
     const storedFeedback = JSON.parse(
       localStorage.getItem("techback-weekly-feedback") || "{}"
     );
 
-    const feedbackGiven =
-      storedFeedback.intensity ||
-      storedFeedback.pain ||
-      storedFeedback.mobility;
-
-    let newPlan = [];
-
-    if (!feedbackGiven) {
-      newPlan = startPlan;
-    } else {
-      newPlan = generateAdaptivePlan(storedFeedback, 1);
-    }
-
-    setPlan(newPlan);
+    const newPlan = generateAdaptivePlan(storedFeedback, 1);
     const startingDay = resetToday ? 1 : currentDay;
     setCurrentDay(startingDay);
     setDayData(newPlan[startingDay - 1] || newPlan[0]);
@@ -57,6 +41,7 @@ function App() {
     if (user) {
       refreshPlan();
     }
+    // eslint-disable-next-line
   }, [user]);
 
   if (!user) {
