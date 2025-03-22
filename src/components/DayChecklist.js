@@ -66,12 +66,29 @@ const DayChecklist = ({ dayData }) => {
                   {info && openInfo === baseName && (
                     <div className="mt-2 text-sm text-gray-700">
                       <p>{info.description}</p>
+
                       {info.image && (
-                        <img
-                          src={info.image}
-                          alt={baseName}
-                          className="mt-2 w-full max-w-sm rounded-md"
-                        />
+                        <div className="mt-2">
+                          <img
+                            src={info.image}
+                            alt={baseName}
+                            className="w-full max-w-sm rounded-md"
+                          />
+
+                          {info.credit && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              Foto:{" "}
+                              <a
+                                href={info.credit.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline"
+                              >
+                                {info.credit.label}
+                              </a>
+                            </p>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}

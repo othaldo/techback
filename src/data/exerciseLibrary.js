@@ -3,6 +3,10 @@ export const exerciseLibrary = {
     description:
       "Lege dich flach auf den Bauch. Die Beine liegen gestreckt, die Arme winkelst du an und stützt dich auf die Unterarme - die Ellbogen direkt unter den Schultern. Der Oberkörper ist leicht aufgerichtet. Atme ruhig und bleibe in dieser Position. Wenn möglich, kannst du dich weiter aufrichten wie in der Sphinx-Stellung (Brust raus, Schultern tief).",
     image: process.env.PUBLIC_URL + "/exercises/sphinx.jpg",
+    credit: {
+      label: "Pexels - A frame in motion",
+      url: "https://www.pexels.com/photo/a-woman-meditating-in-the-garden-11387441/",
+    },
   },
   "Glute Bridge": {
     description:
