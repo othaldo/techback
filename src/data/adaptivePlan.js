@@ -23,8 +23,9 @@ export const generateAdaptivePlan = (feedback = {}, startDay = 15) => {
       `Bird-Dog (6×/Seite, ${birdSeconds} Sek. halten)`,
       ...(pain === "none" ? ["Hüftbeuger-Dehnung (30–60 Sek./Seite)"] : []),
       "Cat-Cow (10 Wh.)",
-      ...(day % 2 === 0 ? ["Hängen (optional, 30 Sek.)"] : []),
+      ...(day % 2 === 1 ? ["Hängen (optional, 30 Sek.)"] : []),
       ...(mobility === "worse" ? ["Piriformis-Dehnung (30 Sek./Seite)"] : []),
+      "Kurzer Spaziergang 🚶‍♂️ (10–15 Min locker)",
     ];
 
     plan.push({

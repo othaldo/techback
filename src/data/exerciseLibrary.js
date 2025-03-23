@@ -37,7 +37,7 @@ export const exerciseLibrary = {
     description:
       "Setze dich auf den Boden oder lege dich auf den Rücken. Lege den rechten Fuß über das linke Knie. Ziehe das linke Bein vorsichtig Richtung Brust, bis du eine Dehnung im rechten Gesäß spürst. Halte die Position ruhig, dann Seite wechseln. Nicht überdehnen.",
   },
-  "Kurzer Spaziergang": {
+  "Kurzer Spaziergang 🚶‍♂️": {
     description:
       "Ein lockerer Spaziergang von 10-15 Minuten. Kein Sport, kein Tempo - einfach entspannt gehen, tief durchatmen und Bewegung genießen. Fördert die Durchblutung und hilft dem Rücken, sich zu entspannen.",
   },
