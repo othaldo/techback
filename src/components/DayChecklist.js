@@ -74,17 +74,30 @@ const DayChecklist = ({ dayData }) => {
                     <div className="mt-2 text-sm font-comfortaa text-white">
                       <p>{info.description}</p>
 
-                      {info.image && (
+                      {(info.image || info.video) && (
                         <div className="mt-2">
-                          <img
-                            src={info.image}
-                            alt={baseName}
-                            className="w-full max-w-sm rounded-md"
-                          />
+                          {info.image && (
+                            <img
+                              src={info.image}
+                              alt={baseName}
+                              className="w-full max-w-sm rounded-md"
+                            />
+                          )}
+
+                          {info.video && (
+                            <video
+                              controls
+                              className="w-full max-w-sm rounded-md mt-2"
+                              preload="metadata"
+                            >
+                              <source src={info.video} type="video/mp4" />
+                              Dein Browser unterstützt kein HTML5-Video.
+                            </video>
+                          )}
 
                           {info.credit && (
                             <p className="text-xs text-white-500 mt-1">
-                              Foto:{" "}
+                              Quelle:{" "}
                               <a
                                 href={info.credit.url}
                                 target="_blank"

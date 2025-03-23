@@ -22,7 +22,7 @@ const Credits = () => {
       <div className="text-left space-y-4 text-sm text-blue-200">
         {imageCredits.length > 0 && (
           <div>
-            <strong>Bilder / Übungen:</strong>
+            <strong>Bilder / Videos / Übungen:</strong>
             <ul className="list-disc pl-5 mt-1">
               {imageCredits.map((credit, i) => (
                 <li key={i}>
@@ -46,7 +46,7 @@ const Credits = () => {
           <br />
           Foto:{" "}
           <a
-            href="https://www.pexels.com/photo/photo-of-half-moon-598661/"
+            href="https://www.pexels.com/photo/detailed-view-of-a-half-moon-in-clear-night-sky-31069508/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-white"
