@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import DayChecklist from "./components/DayChecklist";
 import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
-import Navbar from "./components/Navbar"; // Import Navbar
-import Credits from "./components/Credits"; // Import Credits
-import StandUpTimer from "./components/StandUpTimer"; // Import StandUpTimer
+import Navbar from "./components/Navbar";
+import Credits from "./components/Credits";
+import StandUpTimer from "./components/StandUpTimer";
 
 import { generateAdaptivePlan } from "./data/adaptivePlan";
 
@@ -16,20 +16,16 @@ function App() {
 
   const [dayData, setDayData] = useState(null);
   const [currentDay, setCurrentDay] = useState(1);
-  const [showFeedback, setShowFeedback] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
-  const [showCredits, setShowCredits] = useState(false);
-  const [showStandUp, setShowStandUp] = useState(false);
+  const [activeView, setActiveView] = useState("home");
   const navbarRef = useRef(null);
 
   const refreshPlan = (resetToday = true) => {
     const storedFeedback = JSON.parse(
       localStorage.getItem("techback-weekly-feedback") || "{}"
     );
-
     const newPlan = generateAdaptivePlan(storedFeedback, 1);
-
     const startingDay = resetToday ? 1 : currentDay;
     setCurrentDay(startingDay);
     setDayData(newPlan[startingDay - 1] || newPlan[0]);
@@ -65,17 +61,9 @@ function App() {
   }, [navbarRef]);
 
   const menuItems = [
-    { label: "Home", href: "#", onClick: () => setShowCredits(false) },
-    { label: "Credits", href: "#", onClick: () => setShowCredits(true) },
-    { label: "Settings", href: "#" },
-    {
-      label: "Please Stand Up",
-      href: "#",
-      onClick: () => {
-        setShowCredits(false);
-        setShowStandUp(true);
-      },
-    },
+    { label: "Home", view: "home" },
+    { label: "Credits", view: "credits" },
+    { label: "Please Stand Up", view: "standup" },
   ];
 
   if (!user) {
@@ -92,9 +80,13 @@ function App() {
       <Navbar
         items={menuItems}
         isExpanded={isNavbarExpanded}
-        onItemClick={() => setIsNavbarExpanded(false)}
+        onItemClick={(view) => {
+          setActiveView(view);
+          setIsNavbarExpanded(false);
+        }}
         ref={navbarRef}
       />
+
       <div className="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-slate-900/70 border-b border-white/20 shadow-md px-6 py-3 flex items-center justify-between text-white">
         <button
           onClick={() => setIsNavbarExpanded(!isNavbarExpanded)}
@@ -107,6 +99,7 @@ function App() {
           Hey {user.name}!
         </h1>
       </div>
+
       <div className="pt-16">
         {showMessage && (
           <p className="text-center text-green-700 mb-4 font-comfortaa font-medium">
@@ -115,26 +108,25 @@ function App() {
           </p>
         )}
 
-        {showStandUp ? (
-          <StandUpTimer />
-        ) : showCredits ? (
-          <Credits />
-        ) : showFeedback ? (
+        {activeView === "standup" && <StandUpTimer />}
+        {activeView === "credits" && <Credits />}
+        {activeView === "feedback" && (
           <FeedbackForm
-            onCancel={() => setShowFeedback(false)}
+            onCancel={() => setActiveView("home")}
             onSave={(resetToday = true) => {
-              setShowFeedback(false);
               setShowMessage(true);
               refreshPlanAfterFeedback(resetToday);
+              setActiveView("home");
               setTimeout(() => setShowMessage(false), 3000);
             }}
           />
-        ) : (
+        )}
+        {activeView === "home" && (
           <>
             {dayData && <DayChecklist dayData={dayData} />}
             <div className="text-center mt-6">
               <button
-                onClick={() => setShowFeedback(true)}
+                onClick={() => setActiveView("feedback")}
                 className="bg-emerald-600/80 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg backdrop-blur-md shadow-md transition"
               >
                 Programm anpassen

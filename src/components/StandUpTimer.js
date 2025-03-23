@@ -25,7 +25,14 @@ const StandUpTimer = () => {
       Notification.permission !== "denied"
     ) {
       Notification.requestPermission().then((permission) => {
-        if (permission === "granted") notifyUser();
+        if (permission === "granted") {
+          new Notification("⏰ Please Stand Up!", {
+            body: "Zeit, dich zu strecken oder kurz zu gehen 💪",
+            icon: process.env.PUBLIC_URL + "/favicon.ico",
+          });
+        } else {
+          alert("⏰ Zeit, dich zu strecken oder kurz zu gehen!");
+        }
       });
     } else {
       alert("⏰ Zeit, dich zu strecken oder kurz zu gehen!");
@@ -33,23 +40,35 @@ const StandUpTimer = () => {
   }, []);
 
   useEffect(() => {
-    if (!settings.enabled) {
+    // Cleanup alten Timer – selbst wenn disabled
+    if (intervalRef.current) {
       clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    if (!settings.enabled) {
       return;
     }
 
-    intervalRef.current = setInterval(() => {
+    const newInterval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          notifyUser();
+          try {
+            notifyUser();
+          } catch (error) {
+            console.error("Benachrichtigung fehlgeschlagen:", error);
+          }
           return settings.interval * 60;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(intervalRef.current);
-  }, [settings, notifyUser]);
+    intervalRef.current = newInterval;
+    return () => {
+      clearInterval(newInterval);
+    };
+  }, [settings.enabled, settings.interval, notifyUser]);
 
   const formatTime = (seconds) => {
     const m = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -99,7 +118,7 @@ const StandUpTimer = () => {
           onChange={handleIntervalChange}
           className="w-full p-2 rounded bg-slate-700 text-white border border-white/20"
         >
-          {[1, 15, 20, 25, 30, 45, 60, 90, 120].map((min) => (
+          {[15, 30, 45, 60].map((min) => (
             <option key={min} value={min}>
               Alle {min} Minuten
             </option>
