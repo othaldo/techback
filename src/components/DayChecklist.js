@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { exerciseLibrary } from "../data/exerciseLibrary";
+import GlassCard from "./GlassCard";
 
 const DayChecklist = ({ dayData }) => {
   const [checked, setChecked] = useState(() => {
@@ -25,7 +26,7 @@ const DayChecklist = ({ dayData }) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-slate-800/70 text-white backdrop-blur-md shadow-lg rounded-xl p-6 border border-white/30">
+    <GlassCard>
       <h2 className="text-xl font-semibold font-comfortaa mb-4 text-white">
         {dayData.title} Rückenprogramm
       </h2>
@@ -104,7 +105,7 @@ const DayChecklist = ({ dayData }) => {
           );
         })}
       </ul>
-    </div>
+    </GlassCard>
   );
 };
 

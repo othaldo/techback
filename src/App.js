@@ -3,6 +3,7 @@ import DayChecklist from "./components/DayChecklist";
 import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
 import Navbar from "./components/Navbar"; // Import Navbar
+import Credits from "./components/Credits"; // Import Credits
 
 import { generateAdaptivePlan } from "./data/adaptivePlan";
 
@@ -17,6 +18,7 @@ function App() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
   const navbarRef = useRef(null);
 
   const refreshPlan = (resetToday = true) => {
@@ -61,7 +63,8 @@ function App() {
   }, [navbarRef]);
 
   const menuItems = [
-    { label: "Credits", href: "#" },
+    { label: "Home", href: "#", onClick: () => setShowCredits(false) },
+    { label: "Credits", href: "#", onClick: () => setShowCredits(true) },
     { label: "Settings", href: "#" },
   ];
 
@@ -76,16 +79,21 @@ function App() {
         backgroundImage: `url(${process.env.PUBLIC_URL + "/bg.jpg"})`,
       }}
     >
-      <Navbar items={menuItems} isExpanded={isNavbarExpanded} ref={navbarRef} />
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-900 text-white fixed top-0 left-0 right-0 z-30">
+      <Navbar
+        items={menuItems}
+        isExpanded={isNavbarExpanded}
+        onItemClick={() => setIsNavbarExpanded(false)}
+        ref={navbarRef}
+      />
+      <div className="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-slate-900/70 border-b border-white/20 shadow-md px-6 py-3 flex items-center justify-between text-white">
         <button
           onClick={() => setIsNavbarExpanded(!isNavbarExpanded)}
-          className="text-white p-4 focus:outline-none z-40"
+          className="text-white px-4 py-2 rounded hover:bg-white/10 transition focus:outline-none z-40"
           style={{ fontSize: "24px" }}
         >
           &#9776;
         </button>
-        <h1 className="text-2xl font-comfortaa flex-1 text-center">
+        <h1 className="text-2xl font-comfortaa flex-1 text-center text-white drop-shadow-sm">
           Hey {user.name}!
         </h1>
       </div>
@@ -97,7 +105,9 @@ function App() {
           </p>
         )}
 
-        {showFeedback ? (
+        {showCredits ? (
+          <Credits />
+        ) : showFeedback ? (
           <FeedbackForm
             onCancel={() => setShowFeedback(false)}
             onSave={(resetToday = true) => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import GlassCard from "./GlassCard";
 
 const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
   const storageKey = "techback-weekly-feedback";
@@ -26,7 +27,7 @@ const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-slate-800/70 text-white backdrop-blur-md shadow-lg rounded-xl p-6 border border-white/30">
+    <GlassCard>
       <h2 className="text-2xl font-comfortaa mb-4">Feedback</h2>
       <form
         onSubmit={(e) => {
@@ -122,7 +123,7 @@ const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
           </button>
         </div>
       </form>
-    </div>
+    </GlassCard>
   );
 };
 
