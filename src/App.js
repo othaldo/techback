@@ -4,6 +4,7 @@ import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
 import Navbar from "./components/Navbar"; // Import Navbar
 import Credits from "./components/Credits"; // Import Credits
+import StandUpTimer from "./components/StandUpTimer"; // Import StandUpTimer
 
 import { generateAdaptivePlan } from "./data/adaptivePlan";
 
@@ -19,6 +20,7 @@ function App() {
   const [showMessage, setShowMessage] = useState(false);
   const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
+  const [showStandUp, setShowStandUp] = useState(false);
   const navbarRef = useRef(null);
 
   const refreshPlan = (resetToday = true) => {
@@ -66,6 +68,14 @@ function App() {
     { label: "Home", href: "#", onClick: () => setShowCredits(false) },
     { label: "Credits", href: "#", onClick: () => setShowCredits(true) },
     { label: "Settings", href: "#" },
+    {
+      label: "Please Stand Up",
+      href: "#",
+      onClick: () => {
+        setShowCredits(false);
+        setShowStandUp(true);
+      },
+    },
   ];
 
   if (!user) {
@@ -105,7 +115,9 @@ function App() {
           </p>
         )}
 
-        {showCredits ? (
+        {showStandUp ? (
+          <StandUpTimer />
+        ) : showCredits ? (
           <Credits />
         ) : showFeedback ? (
           <FeedbackForm
