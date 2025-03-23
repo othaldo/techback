@@ -27,7 +27,7 @@ const DayChecklist = ({ dayData }) => {
   return (
     <div className="max-w-xl mx-auto bg-slate-800/70 text-white backdrop-blur-md shadow-lg rounded-xl p-6 border border-white/30">
       <h2 className="text-xl font-semibold font-comfortaa mb-4 text-white">
-        {dayData.title}
+        {dayData.title} Rückenprogramm
       </h2>
 
       <ul className="space-y-3">
