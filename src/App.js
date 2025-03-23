@@ -5,6 +5,7 @@ import Onboarding from "./components/Onboarding";
 import Navbar from "./components/Navbar";
 import Credits from "./components/Credits";
 import StandUpTimer from "./components/StandUpTimer";
+import Stats from "./components/Stats";
 
 import { generateAdaptivePlan } from "./data/adaptivePlan";
 
@@ -62,6 +63,8 @@ function App() {
 
   const menuItems = [
     { label: "Home", view: "home" },
+    { label: "Feedback", view: "feedback" },
+    { label: "Statistiken", view: "stats" },
     { label: "Credits", view: "credits" },
     { label: "Please Stand Up", view: "standup" },
   ];
@@ -134,6 +137,7 @@ function App() {
             </div>
           </>
         )}
+        {activeView === "stats" && <Stats />}
       </div>
     </div>
   );

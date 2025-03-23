@@ -11,14 +11,31 @@ const DayChecklist = ({ dayData }) => {
   const [openInfo, setOpenInfo] = useState(null);
 
   const toggleCheck = (index) => {
-    const newChecked = checked.includes(index)
+    const baseName = dayData.exercises[index].split(" (")[0];
+    const isChecked = checked.includes(index);
+    const newChecked = isChecked
       ? checked.filter((i) => i !== index)
       : [...checked, index];
+
     setChecked(newChecked);
     localStorage.setItem(
       `techback-day-${dayData.day}`,
       JSON.stringify(newChecked)
     );
+
+    const stats = JSON.parse(
+      localStorage.getItem("techback-stat-exercises") || "{}"
+    );
+
+    if (!isChecked) {
+      // Häkchen gesetzt → zählen
+      stats[baseName] = (stats[baseName] || 0) + 1;
+    } else {
+      // Häkchen entfernt → rückgängig machen
+      stats[baseName] = Math.max(0, (stats[baseName] || 1) - 1);
+    }
+
+    localStorage.setItem("techback-stat-exercises", JSON.stringify(stats));
   };
 
   const toggleInfo = (baseName) => {
