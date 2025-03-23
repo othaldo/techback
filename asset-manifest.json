@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/techback/static/css/main.104eaed0.css",
-    "main.js": "/techback/static/js/main.8cea8e68.js",
+    "main.css": "/techback/static/css/main.a2cecfbe.css",
+    "main.js": "/techback/static/js/main.ec06814a.js",
     "static/js/453.321db25b.chunk.js": "/techback/static/js/453.321db25b.chunk.js",
     "index.html": "/techback/index.html",
-    "main.104eaed0.css.map": "/techback/static/css/main.104eaed0.css.map",
-    "main.8cea8e68.js.map": "/techback/static/js/main.8cea8e68.js.map",
+    "main.a2cecfbe.css.map": "/techback/static/css/main.a2cecfbe.css.map",
+    "main.ec06814a.js.map": "/techback/static/js/main.ec06814a.js.map",
     "453.321db25b.chunk.js.map": "/techback/static/js/453.321db25b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.104eaed0.css",
-    "static/js/main.8cea8e68.js"
+    "static/css/main.a2cecfbe.css",
+    "static/js/main.ec06814a.js"
   ]
 }
