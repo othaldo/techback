@@ -116,6 +116,11 @@ function App() {
         onItemClick={(view) => {
           setActiveView(view);
           setIsNavbarExpanded(false);
+
+          // Plan aktualisieren, wenn Home aufgerufen wird
+          if (view === "home") {
+            refreshPlan(false);
+          }
         }}
         ref={navbarRef}
       />
