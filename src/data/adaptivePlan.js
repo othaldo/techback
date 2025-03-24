@@ -1,4 +1,7 @@
-export const generateAdaptivePlan = (feedback = {}, startDay = 15) => {
+import { exerciseLibrary } from "./exerciseLibrary";
+
+export const generateAdaptivePlan = (feedback = {}, startDay = 1) => {
+  // eslint-disable-next-line
   const { intensity = "normal", pain = "none", mobility = "same" } = feedback;
 
   const intensityMap = {
@@ -10,23 +13,72 @@ export const generateAdaptivePlan = (feedback = {}, startDay = 15) => {
   const repsFactor = intensityMap[intensity] || 1.0;
   const adjust = (base, factor) => Math.max(1, Math.round(base * factor));
 
-  const plan = [];
+  // Übungen nach Kategorie gruppieren
+  const grouped = Object.entries(exerciseLibrary).reduce(
+    (acc, [name, entry]) => {
+      const cat = entry.category || "unsortiert";
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(name);
+      return acc;
+    },
+    {}
+  );
 
-  for (let i = 0; i < 14; i++) {
+  const plan = [];
+  const totalDays = 14;
+
+  for (let i = 0; i < totalDays; i++) {
     const day = startDay + i;
+
+    const pickRandom = (arr, count = 1) => {
+      const shuffled = [...arr].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    };
+
     const gluteReps = adjust(12, repsFactor);
     const birdSeconds = adjust(15, repsFactor);
 
-    const exercises = [
-      "Passive Bauchlage / Sphinx (5 Min)",
-      `Glute Bridge (2×${gluteReps})`,
-      `Bird-Dog (6×/Seite, ${birdSeconds} Sek. halten)`,
-      ...(pain === "none" ? ["Hüftbeuger-Dehnung (30–60 Sek./Seite)"] : []),
-      "Cat-Cow (10 Wh.)",
-      ...(day % 2 === 1 ? ["Hängen (optional, 30 Sek.)"] : []),
-      ...(mobility === "worse" ? ["Piriformis-Dehnung (30 Sek./Seite)"] : []),
-      "Kurzer Spaziergang 🚶‍♂️ (10–15 Min locker)",
-    ];
+    let exercises = [];
+
+    // Aktivierung
+    if (grouped["Aktivierung"]?.length)
+      exercises.push(
+        ...pickRandom(grouped["Aktivierung"], 1).map(
+          (name) => `${name} (2×${gluteReps})`
+        )
+      );
+
+    // Stabilität
+    if (grouped["Stabilität"]?.length)
+      exercises.push(
+        ...pickRandom(grouped["Stabilität"], 1).map(
+          (name) => `${name} (${birdSeconds} Sek. halten)`
+        )
+      );
+
+    // Mobilisierung
+    if (grouped["Mobilisierung"]?.length)
+      exercises.push(...pickRandom(grouped["Mobilisierung"], 1));
+
+    // Dehnung (immer, außer bei pain ≠ none vielleicht weniger)
+    if (pain === "none" && grouped["Dehnung"]?.length)
+      exercises.push(
+        ...pickRandom(grouped["Dehnung"], 1).map(
+          (name) => `${name} (30 Sek./Seite)`
+        )
+      );
+
+    // Entlastung (optional z. B. nur jeden 2. Tag)
+    if (day % 2 === 1 && grouped["Entlastung"]?.length)
+      exercises.push(
+        ...pickRandom(grouped["Entlastung"], 1).map(
+          (name) => `${name} (optional, 30 Sek.)`
+        )
+      );
+
+    // Bewegung
+    if (grouped["Bewegung"]?.length)
+      exercises.push(...pickRandom(grouped["Bewegung"], 1));
 
     plan.push({
       day,

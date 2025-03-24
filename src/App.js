@@ -16,29 +16,41 @@ function App() {
   });
 
   const [dayData, setDayData] = useState(null);
-  const [currentDay, setCurrentDay] = useState(1);
   const [showMessage, setShowMessage] = useState(false);
   const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
   const [activeView, setActiveView] = useState("home");
   const navbarRef = useRef(null);
 
-  const refreshPlan = (resetToday = true) => {
+  const getCurrentTrainingDay = () => {
+    const startDateStr = localStorage.getItem("techback-start-date");
+    if (!startDateStr) return 1;
+
+    const startDate = new Date(startDateStr);
+    const today = new Date();
+    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    return diffDays + 1;
+  };
+
+  const refreshPlan = () => {
     const storedFeedback = JSON.parse(
       localStorage.getItem("techback-weekly-feedback") || "{}"
     );
     const newPlan = generateAdaptivePlan(storedFeedback, 1);
-    const startingDay = resetToday ? 1 : currentDay;
-    setCurrentDay(startingDay);
-    setDayData(newPlan[startingDay - 1] || newPlan[0]);
+    const currentDay = getCurrentTrainingDay();
+    console.log("Current day", currentDay);
+    setDayData(newPlan[currentDay - 1] || newPlan[0]);
   };
 
-  const refreshPlanAfterFeedback = (resetToday = true) => {
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith("techback-day-")) {
-        localStorage.removeItem(key);
-      }
-    });
-    refreshPlan(resetToday);
+  const refreshPlanAfterFeedback = (resetToday = false) => {
+    if (resetToday) {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("techback-day-")) {
+          localStorage.removeItem(key);
+        }
+      });
+      localStorage.setItem("techback-start-date", new Date().toISOString());
+    }
+    refreshPlan();
   };
 
   useEffect(() => {
@@ -116,7 +128,7 @@ function App() {
         {activeView === "feedback" && (
           <FeedbackForm
             onCancel={() => setActiveView("home")}
-            onSave={(resetToday = true) => {
+            onSave={(resetToday = false) => {
               setShowMessage(true);
               refreshPlanAfterFeedback(resetToday);
               setActiveView("home");
