@@ -55,9 +55,27 @@ function App() {
 
   useEffect(() => {
     if (user) {
+      // Check ob es bereits ein Startdatum gibt
+      if (!localStorage.getItem("techback-start-date")) {
+        const doneDays = Object.keys(localStorage)
+          .filter((key) => key.startsWith("techback-day-"))
+          .map((key) => parseInt(key.split("-")[2], 10))
+          .filter((n) => !isNaN(n));
+
+        const maxDone = Math.max(0, ...doneDays);
+        const today = new Date();
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - maxDone);
+
+        localStorage.setItem("techback-start-date", startDate.toISOString());
+        console.log(
+          "[techback] Initialisiere Startdatum:",
+          startDate.toISOString()
+        );
+      }
       refreshPlan();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [user]);
 
   useEffect(() => {
