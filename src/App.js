@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import DayChecklist from "./components/DayChecklist";
-import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
 import Navbar, { menuItems } from "./components/Navbar";
-import Credits from "./components/Credits";
-import StandUpTimer from "./components/StandUpTimer";
-import Stats from "./components/Stats";
 import Header from "./components/Header";
 import { useNavbar } from "./hooks/useNavbar";
 import { useTrainingPlan } from "./hooks/useTrainingPlan";
+import { registerAllViews } from "./views/registerAllViews";
+import { getViewComponent } from "./viewRegistry";
+import { VIEW_IDS } from "./views/viewIds";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -25,7 +23,15 @@ function App() {
     refreshPlanAfterFeedback,
   } = useTrainingPlan(user);
 
-  const [activeView, setActiveView] = useState("home");
+  const [activeView, setActiveView] = useState(VIEW_IDS.HOME);
+
+  registerAllViews({
+    dayData,
+    setActiveView,
+    setShowMessage,
+    refreshPlan,
+    refreshPlanAfterFeedback,
+  });
 
   if (!user) {
     return <Onboarding onFinish={setUser} />;
@@ -44,10 +50,6 @@ function App() {
         onItemClick={(view) => {
           setActiveView(view);
           setIsNavbarExpanded(false);
-
-          if (view === "home") {
-            refreshPlan(false);
-          }
         }}
         ref={navbarRef}
       />
@@ -65,34 +67,13 @@ function App() {
             gestartet.
           </p>
         )}
-
-        {activeView === "standup" && <StandUpTimer />}
-        {activeView === "credits" && <Credits />}
-        {activeView === "feedback" && (
-          <FeedbackForm
-            onCancel={() => setActiveView("home")}
-            onSave={(resetToday = false) => {
-              setShowMessage(true);
-              refreshPlanAfterFeedback(resetToday);
-              setActiveView("home");
-              setTimeout(() => setShowMessage(false), 3000);
-            }}
-          />
-        )}
-        {activeView === "home" && (
-          <>
-            {dayData && <DayChecklist dayData={dayData} />}
-            <div className="text-center mt-6">
-              <button
-                onClick={() => setActiveView("feedback")}
-                className="bg-emerald-600/80 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg backdrop-blur-md shadow-md transition"
-              >
-                Programm anpassen
-              </button>
-            </div>
-          </>
-        )}
-        {activeView === "stats" && <Stats />}
+        {getViewComponent(activeView, {
+          dayData,
+          setActiveView,
+          setShowMessage,
+          refreshPlan,
+          refreshPlanAfterFeedback,
+        })}
       </div>
     </div>
   );
