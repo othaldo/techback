@@ -1,9 +1,10 @@
 import React from "react";
+import { menuItems } from "../views/viewIds";
 
-const BurgerMenu = ({ items, onItemClick }) => {
+const BurgerMenu = ({ onItemClick }) => {
   return (
     <ul className="text-white text-center w-full">
-      {items.map((item, index) => (
+      {menuItems.map((item, index) => (
         <li key={index} className="py-4 border-b border-white/10">
           <button
             onClick={() => onItemClick(item.view)}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Onboarding from "./components/Onboarding";
-import Navbar, { menuItems } from "./components/Navbar";
+import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import { useNavbar } from "./hooks/useNavbar";
 import { useTrainingPlan } from "./hooks/useTrainingPlan";
@@ -45,7 +45,6 @@ function App() {
       }}
     >
       <Navbar
-        items={menuItems}
         isExpanded={isNavbarExpanded}
         onItemClick={(view) => {
           setActiveView(view);
