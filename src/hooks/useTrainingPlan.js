@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { generateAdaptivePlan } from "../data/adaptivePlan";
+import { generateDay } from "../data/adaptivePlan";
 
 export const useTrainingPlan = (user) => {
   const [dayData, setDayData] = useState(null);
@@ -19,10 +19,9 @@ export const useTrainingPlan = (user) => {
     const storedFeedback = JSON.parse(
       localStorage.getItem("techback-weekly-feedback") || "{}"
     );
-    const newPlan = generateAdaptivePlan(storedFeedback, 1);
     const currentDay = getCurrentTrainingDay();
-    console.log("Current day", currentDay);
-    setDayData(newPlan[currentDay - 1] || newPlan[0]);
+    const todayData = generateDay(currentDay, storedFeedback);
+    setDayData(todayData);
   }, []);
 
   const refreshPlanAfterFeedback = (resetToday = false) => {
