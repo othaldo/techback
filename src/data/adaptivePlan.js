@@ -1,4 +1,5 @@
 import { exerciseLibrary } from "./exerciseLibrary";
+import seedrandom from "seedrandom";
 
 export const generateAdaptivePlan = (feedback = {}, startDay = 1) => {
   // eslint-disable-next-line
@@ -12,6 +13,16 @@ export const generateAdaptivePlan = (feedback = {}, startDay = 1) => {
 
   const repsFactor = intensityMap[intensity] || 1.0;
   const adjust = (base, factor) => Math.max(1, Math.round(base * factor));
+
+  // Seed aus Feedback + Starttag generieren (beliebig, aber stabil)
+  const seed = JSON.stringify({ feedback, startDay });
+  const rng = seedrandom(seed);
+
+  // pickRandom nutzt jetzt rng statt Math.random
+  const pickRandom = (arr, count = 1) => {
+    const shuffled = [...arr].sort(() => 0.5 - rng());
+    return shuffled.slice(0, count);
+  };
 
   // Übungen nach Kategorie gruppieren
   const grouped = Object.entries(exerciseLibrary).reduce(
@@ -29,11 +40,6 @@ export const generateAdaptivePlan = (feedback = {}, startDay = 1) => {
 
   for (let i = 0; i < totalDays; i++) {
     const day = startDay + i;
-
-    const pickRandom = (arr, count = 1) => {
-      const shuffled = [...arr].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, count);
-    };
 
     const gluteReps = adjust(12, repsFactor);
     const birdSeconds = adjust(15, repsFactor);
