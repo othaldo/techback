@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import DayChecklist from "./components/DayChecklist";
 import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
@@ -6,8 +6,9 @@ import Navbar from "./components/Navbar";
 import Credits from "./components/Credits";
 import StandUpTimer from "./components/StandUpTimer";
 import Stats from "./components/Stats";
-
-import { generateAdaptivePlan } from "./data/adaptivePlan";
+import Header from "./components/Header";
+import { useNavbar } from "./hooks/useNavbar";
+import { useTrainingPlan } from "./hooks/useTrainingPlan";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -15,81 +16,16 @@ function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [dayData, setDayData] = useState(null);
-  const [showMessage, setShowMessage] = useState(false);
-  const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
+  const { isNavbarExpanded, setIsNavbarExpanded, navbarRef } = useNavbar();
+  const {
+    dayData,
+    showMessage,
+    setShowMessage,
+    refreshPlan,
+    refreshPlanAfterFeedback,
+  } = useTrainingPlan(user);
+
   const [activeView, setActiveView] = useState("home");
-  const navbarRef = useRef(null);
-
-  const getCurrentTrainingDay = () => {
-    const startDateStr = localStorage.getItem("techback-start-date");
-    if (!startDateStr) return 1;
-
-    const startDate = new Date(startDateStr);
-    const today = new Date();
-    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-    return diffDays + 1;
-  };
-
-  const refreshPlan = () => {
-    const storedFeedback = JSON.parse(
-      localStorage.getItem("techback-weekly-feedback") || "{}"
-    );
-    const newPlan = generateAdaptivePlan(storedFeedback, 1);
-    const currentDay = getCurrentTrainingDay();
-    console.log("Current day", currentDay);
-    setDayData(newPlan[currentDay - 1] || newPlan[0]);
-  };
-
-  const refreshPlanAfterFeedback = (resetToday = false) => {
-    if (resetToday) {
-      Object.keys(localStorage).forEach((key) => {
-        if (key.startsWith("techback-day-")) {
-          localStorage.removeItem(key);
-        }
-      });
-      localStorage.setItem("techback-start-date", new Date().toISOString());
-    }
-    refreshPlan();
-  };
-
-  useEffect(() => {
-    if (user) {
-      // Check ob es bereits ein Startdatum gibt
-      if (!localStorage.getItem("techback-start-date")) {
-        const doneDays = Object.keys(localStorage)
-          .filter((key) => key.startsWith("techback-day-"))
-          .map((key) => parseInt(key.split("-")[2], 10))
-          .filter((n) => !isNaN(n));
-
-        const maxDone = Math.max(0, ...doneDays);
-        const today = new Date();
-        const startDate = new Date(today);
-        startDate.setDate(today.getDate() - maxDone);
-
-        localStorage.setItem("techback-start-date", startDate.toISOString());
-        console.log(
-          "[techback] Initialisiere Startdatum:",
-          startDate.toISOString()
-        );
-      }
-      refreshPlan();
-    }
-    // eslint-disable-next-line
-  }, [user]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (navbarRef.current && !navbarRef.current.contains(event.target)) {
-        setIsNavbarExpanded(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [navbarRef]);
 
   const menuItems = [
     { label: "Home", view: "home" },
@@ -117,7 +53,6 @@ function App() {
           setActiveView(view);
           setIsNavbarExpanded(false);
 
-          // Plan aktualisieren, wenn Home aufgerufen wird
           if (view === "home") {
             refreshPlan(false);
           }
@@ -125,18 +60,11 @@ function App() {
         ref={navbarRef}
       />
 
-      <div className="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-slate-900/70 border-b border-white/20 shadow-md px-6 py-3 flex items-center justify-between text-white">
-        <button
-          onClick={() => setIsNavbarExpanded(!isNavbarExpanded)}
-          className="text-white px-4 py-2 rounded hover:bg-white/10 transition focus:outline-none z-40"
-          style={{ fontSize: "24px" }}
-        >
-          &#9776;
-        </button>
-        <h1 className="text-2xl font-comfortaa flex-1 text-center text-white drop-shadow-sm">
-          Hey {user.name}!
-        </h1>
-      </div>
+      <Header
+        user={user}
+        isNavbarExpanded={isNavbarExpanded}
+        setIsNavbarExpanded={setIsNavbarExpanded}
+      />
 
       <div className="pt-16">
         {showMessage && (
