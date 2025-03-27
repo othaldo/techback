@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import Onboarding from "./components/Onboarding";
-import Navbar from "./components/Navbar";
 import Header from "./components/Header";
+import Navbar from "./components/Navbar";
+import Onboarding from "./components/Onboarding";
 import { useNavbar } from "./hooks/useNavbar";
-import { useTrainingPlan } from "./hooks/useTrainingPlan";
-import { registerAllViews } from "./views/registerAllViews";
 import { getViewComponent } from "./viewRegistry";
 import { VIEW_IDS } from "./views/viewIds";
+import { useViewInitializer } from "./hooks/useViewInitializer";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -15,22 +14,10 @@ function App() {
   });
 
   const { isNavbarExpanded, setIsNavbarExpanded, navbarRef } = useNavbar();
-  const {
-    dayData,
-    showMessage,
-    setShowMessage,
-    refreshPlan,
-    refreshPlanAfterFeedback,
-  } = useTrainingPlan(user);
-
   const [activeView, setActiveView] = useState(VIEW_IDS.HOME);
-
-  registerAllViews({
-    dayData,
+  const { dayData, showMessage, setShowMessage } = useViewInitializer({
     setActiveView,
-    setShowMessage,
-    refreshPlan,
-    refreshPlanAfterFeedback,
+    user,
   });
 
   if (!user) {
@@ -70,8 +57,6 @@ function App() {
           dayData,
           setActiveView,
           setShowMessage,
-          refreshPlan,
-          refreshPlanAfterFeedback,
         })}
       </div>
     </div>
