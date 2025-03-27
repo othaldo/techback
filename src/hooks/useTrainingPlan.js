@@ -1,19 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { generateDay } from "../data/adaptivePlan";
+import { getCurrentTrainingDay } from "../utils/trainingUtils";
 
 export const useTrainingPlan = (user) => {
   const [dayData, setDayData] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
-
-  const getCurrentTrainingDay = () => {
-    const startDateStr = localStorage.getItem("techback-start-date");
-    if (!startDateStr) return 1;
-
-    const startDate = new Date(startDateStr);
-    const today = new Date();
-    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-    return diffDays + 1;
-  };
 
   const refreshPlan = useCallback(() => {
     const storedFeedback = JSON.parse(

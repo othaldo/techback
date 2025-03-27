@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { exerciseLibrary } from "../data/exerciseLibrary";
 import GlassCard from "./GlassCard";
 
-const DayChecklist = ({ dayData }) => {
+const DayChecklist = ({ dayData, preview = false }) => {
   const [checked, setChecked] = useState(() => {
     const saved = localStorage.getItem(`techback-day-${dayData.day}`);
     return saved ? JSON.parse(saved) : [];
@@ -11,6 +11,8 @@ const DayChecklist = ({ dayData }) => {
   const [openInfo, setOpenInfo] = useState(null);
 
   const toggleCheck = (index) => {
+    if (preview) return; // im Vorschau-Modus kein Speichern
+
     const baseName = dayData.exercises[index].split(" (")[0];
     const isChecked = checked.includes(index);
     const newChecked = isChecked

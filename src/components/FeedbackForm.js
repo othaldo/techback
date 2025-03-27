@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "./GlassCard";
+import { getCurrentTrainingDay } from "../utils/trainingUtils";
+import { generateDay } from "../data/adaptivePlan";
+import DayChecklist from "./DayChecklist";
 
 const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
   const storageKey = "techback-weekly-feedback";
@@ -25,6 +28,9 @@ const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
     localStorage.setItem(storageKey, JSON.stringify(feedback));
     onSave(resetToday);
   };
+
+  const currentDay = getCurrentTrainingDay();
+  const previewDay = generateDay(currentDay + 1, feedback);
 
   return (
     <GlassCard>
@@ -122,6 +128,15 @@ const FeedbackForm = ({ onCancel = () => {}, onSave = () => {} }) => {
             Speichern
           </button>
         </div>
+
+        {previewDay && (
+          <div className="mt-6">
+            <h3 className="text-lg font-comfortaa mb-2 text-white">
+              Vorschau auf den nächsten Trainingstag
+            </h3>
+            <DayChecklist dayData={previewDay} preview />
+          </div>
+        )}
       </form>
     </GlassCard>
   );
