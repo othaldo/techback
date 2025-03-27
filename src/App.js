@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DayChecklist from "./components/DayChecklist";
 import FeedbackForm from "./components/FeedbackForm";
 import Onboarding from "./components/Onboarding";
-import Navbar from "./components/Navbar";
+import Navbar, { menuItems } from "./components/Navbar";
 import Credits from "./components/Credits";
 import StandUpTimer from "./components/StandUpTimer";
 import Stats from "./components/Stats";
@@ -26,14 +26,6 @@ function App() {
   } = useTrainingPlan(user);
 
   const [activeView, setActiveView] = useState("home");
-
-  const menuItems = [
-    { label: "Home", view: "home" },
-    { label: "Feedback", view: "feedback" },
-    { label: "Statistiken", view: "stats" },
-    { label: "Credits", view: "credits" },
-    { label: "Please Stand Up", view: "standup" },
-  ];
 
   if (!user) {
     return <Onboarding onFinish={setUser} />;

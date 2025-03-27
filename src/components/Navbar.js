@@ -1,7 +1,15 @@
 import React, { forwardRef } from "react";
 import BurgerMenu from "./BurgerMenu";
 
-const Navbar = forwardRef(({ items, isExpanded, onItemClick }, ref) => {
+export const menuItems = [
+  { label: "Home", view: "home" },
+  { label: "Feedback", view: "feedback" },
+  { label: "Statistiken", view: "stats" },
+  { label: "Credits", view: "credits" },
+  { label: "Please Stand Up", view: "standup" },
+];
+
+const Navbar = forwardRef(({ isExpanded, onItemClick }, ref) => {
   return (
     <div
       ref={ref}
@@ -10,7 +18,7 @@ const Navbar = forwardRef(({ items, isExpanded, onItemClick }, ref) => {
       }`}
     >
       <div className="flex flex-col items-center mt-10">
-        <BurgerMenu items={items} onItemClick={onItemClick} />
+        <BurgerMenu items={menuItems} onItemClick={onItemClick} />
       </div>
     </div>
   );
