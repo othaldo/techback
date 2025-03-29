@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { exerciseLibrary } from "../data/exerciseLibrary";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import GlassCard from "./GlassCard";
 
 const DayChecklist = ({ dayData, preview = false }) => {
@@ -74,19 +75,29 @@ const DayChecklist = ({ dayData, preview = false }) => {
                   className="mt-1 scale-125 accent-emerald-600"
                 />
 
-                <div>
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (info) toggleInfo(baseName);
-                    }}
-                    className={
-                      info
-                        ? "font-comfortaa text-white-600 hover:underline"
-                        : ""
-                    }
-                  >
-                    {exercise}
+                <div className="w-full">
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-comfortaa text-white-600">
+                      {exercise}
+                    </span>
+
+                    {info && (
+                      <div className="flex-shrink-0 ml-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleInfo(baseName);
+                          }}
+                          className="text-white hover:text-emerald-400 transition-transform"
+                        >
+                          {openInfo === baseName ? (
+                            <ChevronUp size={18} />
+                          ) : (
+                            <ChevronDown size={18} />
+                          )}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {info && openInfo === baseName && (

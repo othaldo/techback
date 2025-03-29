@@ -1,4 +1,5 @@
 import React from "react";
+import { Menu, X } from "lucide-react";
 
 const Header = ({ user, isNavbarExpanded, setIsNavbarExpanded }) => {
   return (
@@ -8,7 +9,7 @@ const Header = ({ user, isNavbarExpanded, setIsNavbarExpanded }) => {
         className="text-white px-4 py-2 rounded hover:bg-white/10 transition focus:outline-none z-40"
         style={{ fontSize: "24px" }}
       >
-        &#9776;
+        {isNavbarExpanded ? <X size={28} /> : <Menu size={28} />}
       </button>
       <h1 className="text-2xl font-comfortaa flex-1 text-center text-white drop-shadow-sm">
         Hey {user.name}!
